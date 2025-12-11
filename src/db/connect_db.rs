@@ -1,40 +1,71 @@
+use sqlx::Executor;
 use sqlx::sqlite::SqlitePool;
 
-const DUMMY_DB: &str = "sqlite://books.db";
+pub const DUMMY_DB: &str = "sqlite://books.db";
 
-async fn get_db_dummy() {
-    // Create database file if it doesn't exist and connect
-    let connection_result = SqlitePool::connect(DUMMY_DB).await;
-    let db = match connection_result {
-        Ok(pool) => {
-            println!("✅ Connection successful!");
-            pool
+/// 1. Create the connection pool
+/// This function purely attempts to create the pool object.
+pub async fn make_connection(db_url: &str) -> Result<SqlitePool, sqlx::Error> {
+    SqlitePool::connect(db_url).await
+}
+
+/// 2. Check if the connection is successful (Ping)
+/// This executes a simple query to ensure the database is actually responsive.
+pub async fn check_connection(pool: &SqlitePool) -> bool {
+    // "SELECT 1" is a standard lightweight query to test connectivity
+    match sqlx::query("SELECT 1").execute(pool).await {
+        Ok(_) => {
+            println!("✅ Ping successful!");
+            true
         }
         Err(e) => {
-            eprintln!("❌ Connection failed: {}", e);
-            return; // Stop the function here since we have no DB to work with
+            eprintln!("❌ Ping failed: {}", e);
+            false
+        }
+    }
+}
+
+/// 3. The Orchestrator (Get the pool)
+/// This calls the previous two functions, initializes the schema, and returns the usable pool.
+pub async fn get_db_dummy() -> Option<SqlitePool> {
+    // Step 1: Make the connection
+    let pool = match make_connection(DUMMY_DB).await {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("❌ Failed to create pool: {}", e);
+            return None;
         }
     };
-    // Create the books table if it doesn't exist
-    sqlx::query(
-        "CREATE TABLE IF NOT EXISTS books (
+
+    // Step 2: Check the connection
+    if !check_connection(&pool).await {
+        return None;
+    }
+
+    // Step 3: Initialize Schema (Table creation & Dummy data)
+    // It is good practice to keep migration logic separate, but we keep it here to match your original flow.
+    let schema_setup = r#"
+        CREATE TABLE IF NOT EXISTS books (
             id INTEGER PRIMARY KEY,
             title TEXT NOT NULL,
             author TEXT NOT NULL
-        )"
-    )
-    .execute(&db)
-    .await
-    .unwrap();
+        );
+        INSERT OR IGNORE INTO books (id, title, author) VALUES (1, 'Sample Book', 'Sample Author');
+    "#;
 
-    // Insert some dummy data
-    sqlx::query("INSERT OR IGNORE INTO books (id, title, author) VALUES (1, 'Sample Book', 'Sample Author')")
-        .execute(&db)
-        .await
-        .unwrap();
+    // We use .execute_many() here to run multiple queries at once if supported,
+    // or just run them individually as you did before.
+    if let Err(e) = pool.execute(schema_setup).await {
+        eprintln!("❌ Failed to initialize database schema: {}", e);
+        return None;
+    }
 
+    println!("✅ Database ready.");
+    Some(pool)
 }
 
+// Your public wrapper to call from main
 pub async fn connect_db() {
-    get_db_dummy().await;
+    let _pool = get_db_dummy().await;
+    // Logic to save the pool to state/session goes here
 }
