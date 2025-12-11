@@ -2,9 +2,12 @@ use std::collections::HashMap;
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 use crate::Commands;
+use crate::app::types::CommandHandler;
+use tokio::runtime::Runtime;
 
 pub fn rustyline_session() -> Result<()> {
     let mut rl = DefaultEditor::new()?;
+    let mut runtime = Runtime::new()?;
     let command_map = Commands::create_command_map(); // Create the map once at startup
     loop {
         let readline = rl.readline(">> ");
@@ -12,7 +15,7 @@ pub fn rustyline_session() -> Result<()> {
             Ok(line) => {
                 rl.add_history_entry(line.as_str()).expect("TODO: panic message");
                 println!("-> {}", line);
-                handle_command(&line, &command_map);
+                handle_command(&line, &command_map, &runtime);
             }
             Err(ReadlineError::Interrupted) => {
                 println!("CTRL-C");
@@ -31,16 +34,19 @@ pub fn rustyline_session() -> Result<()> {
     Ok(())
 }
 
-fn handle_command(line: &str, command_map: &HashMap<String, crate::Commands::basic_commands::CommandHandler>) {
+// TODO FIX THIS SO TI WILL WORK WITH NEW COMMANDHANDLER
+fn handle_command(line: &str, command_map: &HashMap<String, CommandHandler>, rt: &Runtime) {
     let trimmed = line.trim();
     if trimmed.is_empty() {
         return;
     }
     let parts: Vec<&str> = trimmed.split_whitespace().collect();
+
     if let Some(cmd) = parts.get(0) {
         if let Some(handler) = command_map.get(*cmd) {
-            let args = &trimmed[cmd.len()..].trim_start();
-            handler(args);
+            let args: String = (&trimmed[cmd.len()..].trim_start()).to_string();
+            let future_tasks = handler(args);
+            rt.block_on(future_tasks);
         } else {
             println!("Invalid command. Use 'help' for help.");
         }
