@@ -16,7 +16,7 @@ fn cmd_help(_args: String) -> Pin<Box<dyn Future<Output=()> + Send>> {
         println!("  help  : Shows this menu"    );
         println!("  state : Shows database connection state"    );
     })
-}
+}   
 
 pub fn create_command_map() -> HashMap<String, CommandHandler> {
     let mut map = HashMap::new();

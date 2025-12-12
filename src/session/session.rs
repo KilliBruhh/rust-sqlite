@@ -8,10 +8,10 @@ use tokio::runtime::Runtime;
 pub fn rustyline_session() -> Result<()> {
     let mut rl = DefaultEditor::new()?;
     let mut runtime = Runtime::new()?;
-    let command_map = Commands::create_command_map(); // Create the map once at startup
+    let command_map = Commands::merger::create_command_map(); // Create the map once at startup
     loop {
         let readline = rl.readline(">> ");
-        match readline {
+        match readline {    
             Ok(line) => {
                 rl.add_history_entry(line.as_str()).expect("TODO: panic message");
                 println!("-> {}", line);

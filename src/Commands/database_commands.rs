@@ -3,10 +3,6 @@ use std::pin::Pin;
 use crate::db::connect_db;
 use crate::app::types::CommandHandler;
 
-
-// "A Function that that returns a Future we can await later"
-// pub type CommandHandler = fn(String) -> Pin<Box<dyn Future<Output=()> + Send>>;
-
 fn cmd_connect_db(_args: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move { // <--- Added 'move' to ensure ownership is handled safely
         println!("Trying to connect to database...");
