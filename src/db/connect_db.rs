@@ -34,7 +34,7 @@ pub async fn get_db_dummy() -> Option<SqlitePool> {
         Err(e) => {
             eprintln!("❌ Failed to create pool: {}", e);
             return None;
-        }
+        }   
     };
 
     // Step 2: Check the connection

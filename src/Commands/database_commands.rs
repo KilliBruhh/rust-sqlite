@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 use std::pin::Pin;
 use crate::db::connect_db;
-use crate::app::types::CommandHandler;
+use crate::app::types;
+use crate::db::execute_query;
 
 fn cmd_connect_db(_args: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move { // <--- Added 'move' to ensure ownership is handled safely
@@ -18,8 +19,17 @@ fn cmd_connect_db(_args: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     })
 }
 
-pub fn create_command_map_db() -> HashMap<String, CommandHandler> {
-    let mut map: HashMap<String, CommandHandler> = HashMap::new();
-    map.insert("state".to_string(), cmd_connect_db as CommandHandler);
+fn cmd_show(_args: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+    Box::pin(async move {
+        let pool = connect_db::get_db_dummy().await;
+        let query : String = "SELECT * FROM books".to_string();
+        execute_query::execute_query(query).await;
+    })
+}
+
+pub fn create_command_map_db() -> HashMap<String, types::CommandHandler> {
+    let mut map: HashMap<String, types::CommandHandler> = HashMap::new();
+    map.insert("state".to_string(), cmd_connect_db as types::CommandHandler);
+    map.insert("show".to_string(), cmd_show as types::CommandHandler);
     map
 }
