@@ -12,10 +12,10 @@ fn cmd_clear(_args: String) -> Pin<Box<dyn Future<Output=()> + Send>> {
 fn cmd_help(_args: String) -> Pin<Box<dyn Future<Output=()> + Send>> {
     Box::pin(async {
         println!("--- AVAILABLE COMMANDS ---");
-        println!("=== Basic Commands ==");
+        println!("=== Basic commands ==");
         println!("  clear : Wipes the terminal screen");
         println!("  help  : Shows this menu"    );
-        println!("=== Data Commands ===");
+        println!("=== Data commands ===");
         println!("  state : Shows database connection state"    );
         println!("  show : will execute a SQL query"    );
     })

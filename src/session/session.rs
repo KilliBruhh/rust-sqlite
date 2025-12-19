@@ -1,14 +1,14 @@
 use std::collections::HashMap;
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
-use crate::Commands;
+use crate::app;
 use crate::app::types::CommandHandler;
 use tokio::runtime::Runtime;
 
 pub fn rustyline_session() -> Result<()> {
     let mut rl = DefaultEditor::new()?;
-    let mut runtime = Runtime::new()?;
-    let command_map = Commands::merger::create_command_map(); // Create the map once at startup
+    let runtime = Runtime::new()?;
+    let command_map = app::merger::create_command_map(); // Create the map once at startup
     loop {
         let readline = rl.readline(">> ");
         match readline {    

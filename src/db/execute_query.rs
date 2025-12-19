@@ -1,9 +1,5 @@
 use std::pin::Pin;
 use crate::db::connect_db;
-use sqlx::sqlite::SqliteConnectOptions;
-use sqlx::{query, Executor};
-use sqlx::query::Query;
-use crate::db::connect_db::connect_db;
 
 pub fn execute_query(query: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move {

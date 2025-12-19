@@ -21,7 +21,6 @@ fn cmd_connect_db(_args: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
 
 fn cmd_show(_args: String) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move {
-        let pool = connect_db::get_db_dummy().await;
         let query : String = "SELECT * FROM books".to_string();
         execute_query::execute_query(query).await;
     })
