@@ -9,6 +9,6 @@ pub fn execute_query(query: String) -> Pin<Box<dyn Future<Output = ()> + Send>> 
         } else {
             println!("ERROR During Query execution.");
             return;
-        }
+        }   
     })
 }

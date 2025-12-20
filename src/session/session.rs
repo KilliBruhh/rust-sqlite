@@ -25,7 +25,7 @@ pub fn rustyline_session() -> Result<()> {
                 println!("CTRL-D");
                 break;
             }
-            Err(err) => {
+            Err(err     ) => {
                 println!("Error: {:?}", err);
                 break;
             }

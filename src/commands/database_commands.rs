@@ -30,5 +30,7 @@ pub fn create_command_map_db() -> HashMap<String, types::CommandHandler> {
     let mut map: HashMap<String, types::CommandHandler> = HashMap::new();
     map.insert("state".to_string(), cmd_connect_db as types::CommandHandler);
     map.insert("show".to_string(), cmd_show as types::CommandHandler);
+
+    // Return the HashMap
     map
 }
