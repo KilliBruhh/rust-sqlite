@@ -15,11 +15,9 @@ pub fn query_rustyline_session() -> Result<()> {
                 // Add command handling for Query Results
             }
             Err(ReadlineError::Interrupted) => {    // TODO: Quits the Query session not the parent session
-                println!("CTRL-C");
                 break;
             }
             Err(ReadlineError::Eof) => {            // TODO: Quits the Query session not the parent session
-                println!("CTRL-D");
                 break;
             }
             Err(err) => {
