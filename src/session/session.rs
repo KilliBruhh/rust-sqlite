@@ -34,7 +34,6 @@ pub fn rustyline_session() -> Result<()> {
     Ok(())
 }
 
-// TODO FIX THIS SO TI WILL WORK WITH NEW COMMANDHANDLER
 fn handle_command(line: &str, command_map: &HashMap<String, CommandHandler>, rt: &Runtime) {
     let trimmed = line.trim();
     if trimmed.is_empty() {
