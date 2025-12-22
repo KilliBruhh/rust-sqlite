@@ -1,6 +1,7 @@
 use tokio::runtime::Runtime;
 
 pub struct SessionStatus {
+    #[allow(dead_code)]
     pub runtime: Runtime,
     pub should_quit: bool,
 }
