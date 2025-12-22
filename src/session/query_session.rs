@@ -1,12 +1,17 @@
 use rustyline::error::ReadlineError;
 use rustyline::{DefaultEditor, Result};
 use tokio::runtime::Runtime;
+use crate::app::session_context::SessionStatus;
 
 pub fn query_rustyline_session() -> Result<()> {
     let mut rl = DefaultEditor::new()?;
     let _runtime = Runtime::new()?;
+    let ctx_query = SessionStatus::new()?;
     // Add command map but for query
     loop {
+        if ctx_query.should_quit {
+            break;
+        }
         let read_query_line = rl.readline("=>");
         match read_query_line {
             Ok(line) => {
