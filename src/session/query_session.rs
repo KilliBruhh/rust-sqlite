@@ -16,7 +16,7 @@ pub fn query_rustyline_session() -> Result<()> {
         if ctx_query.should_quit {
             break;
         }
-        let read_query_line = rl.readline("=>");
+        let read_query_line = rl.readline("$: ");
         match read_query_line {
             Ok(line) => {
                 rl.add_history_entry(line.as_str()).expect("TODO: panic message");
