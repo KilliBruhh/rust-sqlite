@@ -1,12 +1,45 @@
+use std::panic::Location;
 use sqlx::Executor;
 use sqlx::sqlite::SqlitePool;
 
 pub const DUMMY_DB: &str = "sqlite://books.db";
 
+struct DatabaseConnection {
+    pool: SqlitePool,
+    name: String,
+    location: String,
+}
+
+impl DatabaseConnection {
+    pub fn set_active_pool(&mut self, pool: SqlitePool) {
+        self.pool = pool
+    }
+    pub fn get_active_pool(&self) -> &SqlitePool {
+        &self.pool
+    }
+}
+
 /// 1. Create the connection pool
 /// This function purely attempts to create the pool object.
 pub async fn make_connection(db_url: &str) -> Result<SqlitePool, sqlx::Error> {
     SqlitePool::connect(db_url).await
+}
+pub async fn create_connection() {
+    let pool = match make_connection(DUMMY_DB).await {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("❌ Failed to create pool: {}", e);
+            return;
+        }
+    };
+    if !check_connection(&pool).await {
+        return;
+    }
+    let mut db_connection = DatabaseConnection {
+        pool,
+        name: "".to_string(),
+        location: "".to_string(),
+    };
 }
 
 /// 2. Check if the connection is successful (Ping)
@@ -25,6 +58,10 @@ pub async fn check_connection(pool: &SqlitePool) -> bool {
     }
 }
 
+pub fn on_call_db() {
+
+}
+
 /// 3. The Orchestrator (Get the pool)
 /// This calls the previous two functions, initializes the schema, and returns the usable pool.
 pub async fn get_db_dummy() -> Option<SqlitePool> {
@@ -34,7 +71,7 @@ pub async fn get_db_dummy() -> Option<SqlitePool> {
         Err(e) => {
             eprintln!("❌ Failed to create pool: {}", e);
             return None;
-        }   
+        }
     };
 
     // Step 2: Check the connection
@@ -64,8 +101,3 @@ pub async fn get_db_dummy() -> Option<SqlitePool> {
     Some(pool)
 }
 
-// Your public wrapper to call from main
-pub async fn connect_db() {
-    let _pool = get_db_dummy().await;
-    // Logic to save the pool to state/session goes here
-}
