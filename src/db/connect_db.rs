@@ -1,6 +1,9 @@
+use std::{env, fs};
+use std::ffi::OsStr;
 use std::panic::Location;
 use sqlx::Executor;
 use sqlx::sqlite::SqlitePool;
+use std::path::Path;
 
 pub const DUMMY_DB: &str = "sqlite://books.db";
 
@@ -40,6 +43,28 @@ pub async fn create_connection() {
         name: "".to_string(),
         location: "".to_string(),
     };
+}
+
+
+pub fn database_connection() {
+    // Flow of fucntion
+    println!("- choose a database to connect to: ");
+    search_db_files();
+}
+
+pub fn search_db_files() {
+    let current_directory = std::env::current_dir().unwrap();
+    let entries = fs::read_dir(current_directory).expect("Failed to read current directory");
+    for entry in entries {
+        if let Ok(entry) = entry {
+            let path = entry.path();
+            if path.is_file() {
+                if path.extension() == Some(OsStr::new("db")) {
+                    println!("Found .db file at: {}", entry.path().display());
+                }
+            }
+        }
+    }
 }
 
 /// 2. Check if the connection is successful (Ping)

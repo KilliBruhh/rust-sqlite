@@ -5,7 +5,7 @@ use crate::app::types::CommandHandler;
 use crate::session::query_session;
 
 
-fn cmd_test1(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output=()> + Send>> {
+fn cmd_test1(_args: String, _option: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output=()> + Send>> {
     Box::pin(async move {})
 }
 

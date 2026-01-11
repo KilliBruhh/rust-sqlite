@@ -48,8 +48,13 @@ fn handle_command(line: &str, command_map: &HashMap<String, CommandHandler>, rt:
 
     if let Some(cmd) = parts.get(0) {
         if let Some(handler) = command_map.get(*cmd) {
-            let args: String = (&trimmed[cmd.len()..].trim_start()).to_string();
-            let future_tasks = handler(args, _ctx);
+            let command_line: String = (&trimmed[cmd.len()..].trim_start()).to_string();
+            let options: String = command_line.split_whitespace().filter(|word| word.starts_with("--")).collect();  // Searcher for all words that starts with -- (these are options)
+            let args = command_line.split_once(' ')
+                .map(|(_, remainder)| remainder.to_string())
+                .unwrap_or_default();
+            println!("QUERY SESSION Command: {}, Options: {}", args, options);
+            let future_tasks = handler(args, options, _ctx);    // Command - Options - Session Status
             rt.block_on(future_tasks);
         } else {
             println!("Invalid command. Use 'help' for help.");

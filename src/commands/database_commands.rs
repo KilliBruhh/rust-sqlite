@@ -4,7 +4,7 @@ use crate::app::session_context::SessionStatus;
 use crate::db::{connect_db, execute_query};
 use crate::app::types;
 
-fn cmd_connect_db(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+fn cmd_connect_db(_args: String, _option: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move { // <--- Added 'move' to ensure ownership is handled safely
         println!("Trying to connect to database...");
         let pool = connect_db::get_db_dummy().await;
@@ -19,19 +19,19 @@ fn cmd_connect_db(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future
     })
 }
 
-fn cmd_show(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+fn cmd_show(_args: String, _option: String,  _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move {
         let query : String = "SELECT * FROM books".to_string();
         execute_query::execute_query(query).await;
     })
 }
 
-fn cmd_show_databases(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+fn cmd_show_databases(_args: String, _option: String,  _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move {
         execute_query::show_databases().await;
     })
 }
-fn cmd_show_tables(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
+fn cmd_show_tables(_args: String, _option: String,  _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output = ()> + Send>> {
     Box::pin(async move {
         execute_query::show_tables().await;
     })
@@ -46,3 +46,4 @@ pub fn create_command_map_db() -> HashMap<String, types::CommandHandler> {
     // Return the HashMap
     map
 }
+

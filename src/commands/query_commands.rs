@@ -3,7 +3,7 @@ use std::pin::Pin;
 use crate::app::session_context::SessionStatus;
 use crate::app::types::CommandHandler;
 
-fn cmd_quit_query(_args: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output=()> + Send>> {
+fn cmd_quit_query(_args: String, _option: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output=()> + Send>> {
     (& mut * _ctx).quit();
     Box::pin(async move {})
 }

@@ -1,3 +1,5 @@
+use crate::db::connect_db;
+
 mod db;
 mod session;
 mod app;
