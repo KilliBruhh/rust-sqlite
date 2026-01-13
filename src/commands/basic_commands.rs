@@ -55,6 +55,7 @@ fn cmd_connect(_args: String, _option: String, _ctx: &mut SessionStatus) -> Pin<
     })
 }
 
+// Todo replace with enum for performance
 pub fn create_command_map() -> HashMap<String, CommandHandler> {
     let mut map = HashMap::new();
     map.insert("clear".to_string(), cmd_clear as CommandHandler);
