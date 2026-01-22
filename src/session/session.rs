@@ -49,6 +49,11 @@ fn handle_command(line: &str, command_map: &HashMap<String, CommandHandler>, rt:
     if let Some(cmd) = parts.get(0) {
         if let Some(handler) = command_map.get(*cmd) {
             let (args, options) : (String, String) = split_up_command(trimmed.to_string());
+
+            //
+            app::option_handler::call_option_handler(&options);
+
+            // TODO - Change options type to list / vector (evry marked / found option should be 1 item in list).
             let future_tasks = handler(args, options, _ctx);    // Command - Options - Session Status
             rt.block_on(future_tasks);
         } else {
