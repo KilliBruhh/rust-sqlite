@@ -1,10 +1,11 @@
 #[derive(Copy, Clone)]
 
+#[allow(unused)]
 pub enum CommandList {
     // Helper
-    help,
-    clear,
-    quit
+    Help,
+    Clear,
+    Quit
 }
 
 pub fn call_option_handler(option_string: &String) -> Vec<String> {         // TODO - Change Return type

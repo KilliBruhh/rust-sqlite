@@ -4,7 +4,6 @@ use crate::db::connect_db;
 
 #[derive(FromRow, Debug)]
 struct SqliteDatabase {
-    seq: i64,
     name: String,
     file: Option<String>,
 }

@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::pin::Pin;
 use crate::app::session_context::SessionStatus;
 use crate::app::types::CommandHandler;
-use crate::session::query_session;
 
 
 fn cmd_test1(_args: String, _option: String, _ctx: &mut SessionStatus) -> Pin<Box<dyn Future<Output=()> + Send>> {

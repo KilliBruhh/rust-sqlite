@@ -1,12 +1,11 @@
-use std::{env, fs};
+use std::{fs};
 use std::ffi::OsStr;
-use std::panic::Location;
 use sqlx::Executor;
 use sqlx::sqlite::SqlitePool;
-use std::path::Path;
 
 pub const DUMMY_DB: &str = "sqlite://books.db";
 
+#[allow(dead_code)]
 struct DatabaseConnection {
     pool: SqlitePool,
     name: String,
@@ -14,9 +13,13 @@ struct DatabaseConnection {
 }
 
 impl DatabaseConnection {
+
+
+    #[allow(dead_code)]
     pub fn set_active_pool(&mut self, pool: SqlitePool) {
         self.pool = pool
     }
+    #[allow(dead_code)]
     pub fn get_active_pool(&self) -> &SqlitePool {
         &self.pool
     }
@@ -27,6 +30,8 @@ impl DatabaseConnection {
 pub async fn make_connection(db_url: &str) -> Result<SqlitePool, sqlx::Error> {
     SqlitePool::connect(db_url).await
 }
+
+#[allow(dead_code)]
 pub async fn create_connection() {
     let pool = match make_connection(DUMMY_DB).await {
         Ok(p) => p,
@@ -38,7 +43,7 @@ pub async fn create_connection() {
     if !check_connection(&pool).await {
         return;
     }
-    let mut db_connection = DatabaseConnection {
+    let _db_connection = DatabaseConnection {
         pool,
         name: "".to_string(),
         location: "".to_string(),
@@ -46,8 +51,9 @@ pub async fn create_connection() {
 }
 
 
+#[allow(dead_code)]
 pub fn database_connection() {
-    // Flow of fucntion
+    // Flow of function
     println!("- choose a database to connect to: ");
     search_db_files();
 }
@@ -81,10 +87,6 @@ pub async fn check_connection(pool: &SqlitePool) -> bool {
             false
         }
     }
-}
-
-pub fn on_call_db() {
-
 }
 
 /// 3. The Orchestrator (Get the pool)
