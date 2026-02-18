@@ -15,7 +15,7 @@ pub fn call_option_handler(option_string: &String) -> Vec<String> {         // T
         .collect::<Vec<&str>>()
         .chunks(2)
         .filter(|pair| {
-            pair.len() == 2 && pair[0].starts_with('-') && !pair[1].starts_with('-')
+            pair.len() == 2 && pair[0].starts_with('-')  && pair[0].len() > 1 && !pair[1].starts_with('-')
         })
         .map(|pair| pair.join(" "))
         .collect();
@@ -38,9 +38,4 @@ fn detect_options(option_list: &Vec<String>) {
             println!("### Unknown Match Option: {}", option);
         }
     }
-}
-
-fn check_if_option_is_valid(option: &String) -> bool {
-    //option must be -<OPTION_NAME> <PARAMETER>
-    return false
 }
