@@ -31,12 +31,11 @@ pub async fn make_connection(db_url: &str) -> Result<SqlitePool, sqlx::Error> {
     SqlitePool::connect(db_url).await
 }
 
-#[allow(dead_code)]
 pub async fn create_connection() {
     let pool = match make_connection(DUMMY_DB).await {
         Ok(p) => p,
         Err(e) => {
-            eprintln!("❌ Failed to create pool: {}", e);
+            eprintln!("ERROR: Failed to create pool: {}", e);
             return;
         }
     };
@@ -51,7 +50,6 @@ pub async fn create_connection() {
 }
 
 
-#[allow(dead_code)]
 pub fn database_connection() {
     // Flow of function
     println!("- choose a database to connect to: ");
@@ -79,11 +77,11 @@ pub async fn check_connection(pool: &SqlitePool) -> bool {
     // "SELECT 1" is a standard lightweight query to test connectivity
     match sqlx::query("SELECT 1").execute(pool).await {
         Ok(_) => {
-            println!("✅ Ping successful!");
+            println!("SUCCES: Ping successful!");
             true
         }
         Err(e) => {
-            eprintln!("❌ Ping failed: {}", e);
+            eprintln!("FAIL: Ping failed: {}", e);
             false
         }
     }
@@ -96,7 +94,7 @@ pub async fn get_db_dummy() -> Option<SqlitePool> {
     let pool = match make_connection(DUMMY_DB).await {
         Ok(p) => p,
         Err(e) => {
-            eprintln!("❌ Failed to create pool: {}", e);
+            eprintln!("FAIL: Failed to create pool: {}", e);
             return None;
         }
     };
@@ -120,11 +118,11 @@ pub async fn get_db_dummy() -> Option<SqlitePool> {
     // We use .execute_many() here to run multiple queries at once if supported,
     // or just run them individually as you did before.
     if let Err(e) = pool.execute(schema_setup).await {
-        eprintln!("❌ Failed to initialize database schema: {}", e);
+        eprintln!("FAIL: Failed to initialize database schema: {}", e);
         return None;
     }
 
-    println!("✅ Database ready.");
+    println!("Database ready.");
     Some(pool)
 }
 
