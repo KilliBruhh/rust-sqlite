@@ -15,21 +15,10 @@ pub fn call_option_handler(option_string: &String) -> Vec<String> {         // T
         .collect::<Vec<&str>>()
         .chunks(2)
         .filter(|pair| {
-            if pair.len() != 2 { return false; }
-            let flag = pair[0];
-            let val = pair[1];
-            // Strict Flag Check: Must be '-' then exactly one alphabetic char
-            let is_valid_flag = flag.len() == 2
-                && flag.starts_with('-')
-                && flag.chars().nth(1).unwrap().is_alphabetic();
-            // Strict Value Check: Must not be a flag itself
-            let is_valid_value = !val.starts_with('-');
-
-            is_valid_flag && is_valid_value
+            pair.len() == 2 && pair[0].starts_with('-')  && pair[0].len() > 1 && !pair[1].starts_with('-')
         })
         .map(|pair| pair.join(" "))
         .collect();
-
     println!("## Option List  {:?}", option_list);
     detect_options(&option_list);
     option_list
@@ -50,7 +39,25 @@ fn detect_options(option_list: &Vec<String>) {
     }
 }
 
-fn check_if_option_is_valid(option: &String) -> bool {
-    // option must be -<OPTION_NAME> <PARAMETER>
-    return false
-}
+/*
+    let option_list: Vec<String> = option_string
+        .split_whitespace()
+        .collect::<Vec<&str>>()
+        .chunks(2)
+        .filter(|pair| {
+            if pair.len() != 2 { return false; }
+            let flag = pair[0];
+            let val = pair[1];
+            // Strict Flag Check: Must be '-' then exactly one alphabetic char
+            let is_valid_flag = flag.len() == 2
+                && flag.starts_with('-')
+                && flag.chars().nth(1).unwrap().is_alphabetic();
+            // Strict Value Check: Must not be a flag itself
+            let is_valid_value = !val.starts_with('-');
+
+            is_valid_flag && is_valid_value
+        })
+        .map(|pair| pair.join(" "))
+        .collect();
+
+ */
