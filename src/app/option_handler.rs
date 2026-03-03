@@ -8,8 +8,39 @@ pub enum CommandList {
     Quit
 }
 
+    // INPUT test1 -t test1 -t test2 - t test3 -t test4 -tt test5
 pub fn call_option_handler(option_string: &String) -> Vec<String> {         // TODO - Change Return type
     println!("## Option String {}", option_string);
+
+//        1. Slide through tokens pairwise (not non-overlapping chunks)
+//        2. Check if token[i] matches -X pattern (dash + single letter only)
+//        3. And token[i+1] is NOT an option (doesn't start with -)
+//        4. Then combine them
+
+    let option_pairings: Vec<String> = option_string
+        .split_whitespace()
+        .collect::<Vec<&str>>()
+        .chunks(2)
+        .filter(|pair| {
+            println!("### Pairing [{} {}]", pair[0], pair[1]);
+            if (pair.len() == 2 && pair[0].starts_with('-')  && pair[0].len() > 1 && !pair[1].starts_with('-')) {
+                println!("-> TRUE");
+            } else if (pair[0].contains(' ') || pair[1].contains(' '))  {
+                println!("-> FALSE 1");
+            } else {
+                println!("-> NO DETECT");
+            }
+
+            return pair[0] == option_string;
+        })
+        .map(|pair| pair.join(" "))
+        .collect();
+    println!("## Option List  {:?}", option_pairings);
+    option_pairings
+}
+
+
+/*
     let option_list: Vec<String> = option_string
         .split_whitespace()
         .collect::<Vec<&str>>()
@@ -20,44 +51,5 @@ pub fn call_option_handler(option_string: &String) -> Vec<String> {         // T
         .map(|pair| pair.join(" "))
         .collect();
     println!("## Option List  {:?}", option_list);
-    detect_options(&option_list);
     option_list
-}
-
-fn detect_options(option_list: &Vec<String>) {
-    for option in option_list {
-        println!("\n## Option {}", option);
-        if option.starts_with("-") {
-            println!("### Match Option: {}", option);
-            // Option type
-            // step 2 detect the option parameter (next in line)
-
-        } else {
-            // non type -> exit
-            println!("### Unknown Match Option: {}", option);
-        }
-    }
-}
-
-/*
-    let option_list: Vec<String> = option_string
-        .split_whitespace()
-        .collect::<Vec<&str>>()
-        .chunks(2)
-        .filter(|pair| {
-            if pair.len() != 2 { return false; }
-            let flag = pair[0];
-            let val = pair[1];
-            // Strict Flag Check: Must be '-' then exactly one alphabetic char
-            let is_valid_flag = flag.len() == 2
-                && flag.starts_with('-')
-                && flag.chars().nth(1).unwrap().is_alphabetic();
-            // Strict Value Check: Must not be a flag itself
-            let is_valid_value = !val.starts_with('-');
-
-            is_valid_flag && is_valid_value
-        })
-        .map(|pair| pair.join(" "))
-        .collect();
-
  */
