@@ -20,8 +20,12 @@ pub fn call_option_handler(option_string: &String) -> Vec<String> {         // T
         .filter(|pair| {
             println!("## Pair[0] {}", pair[0]);
             println!("## Pair[1] {}", pair[1]);
-
-            if (pair[0].starts_with("-")) && (!pair[1].starts_with("-") && pair[0].len() == 2 ) {
+            let valid = pair[0].starts_with('-')
+                && pair[0].len() == 2
+                && !pair[1].starts_with('-');
+            // Base validarion
+            // next step --> Ignore invalid until new valid pair[0]
+            if valid {
                 println!("--V PASS")
             } else {
                 println!("--X NO PASS");
